@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Editor - Input Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-lg bg-white rounded-xl shadow-lg p-8">
+        <h1 class="text-2xl font-bold text-center mb-6">시스템 테스트</h1>
+        <p class="text-center text-gray-600 mb-6">아래 입력창에 텍스트를 입력하고 버튼을 누르면, 구글 시트 '시트2'의 A1 셀에 값이 기록됩니다.</p>
+        <div class="space-y-4">
+            <input type="text" id="textInput" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="구글 시트에 입력할 값...">
+            <button id="submitButton" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition">
+                시트에 기록하기
+            </button>
+        </div>
+        <div id="status" class="mt-4 text-center font-medium"></div>
+    </div>
+
+    <script>
+        const textInput = document.getElementById('textInput');
+        const submitButton = document.getElementById('submitButton');
+        const statusDiv = document.getElementById('status');
+
+        // ★★★ 중요: 이 URL은 5단계에서 백엔드 배포 후 얻은 실제 URL로 교체해야 합니다. ★★★
+        const BACKEND_URL = 'YOUR_CLOUD_RUN_SERVICE_URL_HERE/update-sheet';
+
+        submitButton.addEventListener('click', async () => {
+            const text = textInput.value;
+            if (!text) {
+                alert('입력값이 없습니다.');
+                return;
+            }
+
+            statusDiv.textContent = '처리 중...';
+            statusDiv.className = 'mt-4 text-center font-medium text-gray-500';
+
+            try {
+                const response = await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text: text }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    statusDiv.textContent = `성공: ${result.message}`;
+                    statusDiv.className = 'mt-4 text-center font-medium text-green-600';
+                } else {
+                    throw new Error(result.message || '알 수 없는 오류 발생');
+                }
+
+            } catch (error) {
+                statusDiv.textContent = `오류: ${error.message}`;
+                statusDiv.className = 'mt-4 text-center font-medium text-red-600';
+            }
+        });
+    </script>
+</body>
+</html>
