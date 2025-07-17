@@ -33,18 +33,18 @@ jobs:
         with:
           context: .
           push: true
-          # ✨ 리전 정보를 포함한 Artifact Registry 경로로 수정
           tags: asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE_NAME }}/${{ secrets.GCP_SERVICE_NAME }}:${{ github.sha }}
 
       - name: Deploy to Cloud Run
         uses: 'google-github-actions/deploy-cloudrun@v1'
         with:
           service: '${{ secrets.GCP_SERVICE_NAME }}'
-          region: 'asia-northeast3' # 서울 리전
-          # ✨ 빌드된 이미지 경로를 정확하게 지정
+          region: 'asia-northeast3'
           image: 'asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE_NAME }}/${{ secrets.GCP_SERVICE_NAME }}:${{ github.sha }}'
+          # --- ✨ 여기가 수정된 부분입니다 ✨ ---
+          # 1. 서비스 계정을 직접 지정합니다.
+          #    (이메일 주소 전체를 입력해야 합니다.)
+          service_account: 'sheet-writer-backend@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com'
+          # 2. 더 이상 필요 없는 env_vars 부분을 완전히 제거했습니다.
           flags: '--platform=managed --allow-unauthenticated'
-          # ✨✨✨ 여기가 가장 중요한 수정 부분입니다! toJson()을 제거했습니다. ✨✨✨
-          env_vars:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-
+          # --- ✨ 수정된 부분 끝 ---
