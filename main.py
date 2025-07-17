@@ -1,5 +1,6 @@
 import os
 import gspread
+import json  # json 라이브러리를 추가합니다.
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from google.oauth2.service_account import Credentials
@@ -8,20 +9,23 @@ from google.oauth2.service_account import Credentials
 app = Flask(__name__)
 CORS(app) # 모든 도메인에서의 요청을 허용 (개발용)
 
+# --- ✨ 여기가 수정된 부분입니다 ✨ ---
 # 구글 시트 인증 설정
-# GitHub Actions Secret에서 받아온 서비스 계정 정보를 사용
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
-# 로컬 테스트 시: creds = Credentials.from_service_account_file('your-key-file.json', scopes=scopes)
-# Cloud Run 환경에서는 환경 변수에서 직접 로드하는 것이 더 안전하지만,
-# 이 예제에서는 GitHub Secret을 통해 전달된 내용을 사용합니다.
-# 실제로는 Cloud Run의 환경 변수 기능을 사용하는 것을 권장합니다.
-# 여기서는 gspread의 기본 인증 방식을 활용합니다.
-# gspread는 GOOGLE_APPLICATION_CREDENTIALS 환경 변수를 자동으로 찾습니다.
+
+# 환경 변수에서 JSON 키 '문자열'을 가져옵니다.
+key_string = os.environ.get("GCP_SA_KEY")
+
+# 가져온 문자열을 파이썬 딕셔너리 형태로 변환합니다.
+key_info = json.loads(key_string)
+
+# 변환된 정보를 사용해 인증합니다.
 creds = Credentials.from_service_account_info(
-    info=eval(os.environ.get("GCP_SA_KEY")), # 환경 변수에서 키 정보 로드
+    info=key_info,  # eval() 대신 json.loads() 결과를 사용합니다.
     scopes=scopes
 )
 client = gspread.authorize(creds)
+# --- ✨ 수정된 부분 끝 ---
 
 # 구글 시트 정보
 SPREADSHEET_ID = '1F4rZbcBiuM9MDoFyfHnXVIFJ7GX99lUmaZZL_i3WZ40'
