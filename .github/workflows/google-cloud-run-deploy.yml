@@ -44,4 +44,4 @@ jobs:
           platform: 'managed'
           allow_unauthenticated: true
           env_vars:
-            GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
