@@ -24,8 +24,8 @@
         const submitButton = document.getElementById('submitButton');
         const statusDiv = document.getElementById('status');
 
-        // ★★★ 중요: 이 URL은 5단계에서 백엔드 배포 후 얻은 실제 URL로 교체해야 합니다. ★★★
-        const BACKEND_URL = 'YOUR_CLOUD_RUN_SERVICE_URL_HERE/update-sheet';
+        // ★★★★★ 여기가 수정되었습니다! 실제 백엔드 주소를 입력했습니다. ★★★★★
+        const BACKEND_URL = 'https://geniusasso-1018080622356.asia-northeast3.run.app/update-sheet';
 
         submitButton.addEventListener('click', async () => {
             const text = textInput.value;
@@ -45,6 +45,10 @@
                     },
                     body: JSON.stringify({ text: text }),
                 });
+
+                if (!response.headers.get("content-type")?.includes("application/json")) {
+                   throw new Error("서버로부터 JSON이 아닌 응답을 받았습니다. 백엔드 로그를 확인하세요.");
+                }
 
                 const result = await response.json();
 
