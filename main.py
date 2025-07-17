@@ -5,7 +5,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from google.oauth2.service_account import Credentials
 
-# Flask 앱 초기화 및 CORS 설정
+# Flask 앱 초기화 및 CORS 설정.
 app = Flask(__name__)
 CORS(app) # 모든 도메인에서의 요청을 허용 (개발용)
 
