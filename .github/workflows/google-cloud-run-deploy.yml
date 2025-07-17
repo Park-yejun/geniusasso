@@ -36,12 +36,12 @@ jobs:
           tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE_NAME }}:${{ github.sha }}
 
       - name: Deploy to Cloud Run
-        uses: 'google-github-actions/deploy-cloudrun@v1'
-        with:
-          service: '${{ secrets.GCP_SERVICE_NAME }}'
-          region: 'asia-northeast3'
-          image: 'gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE_NAME }}:${{ github.sha }}'
-          platform: 'managed'
-          allow_unauthenticated: true
-          env_vars:
-            GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+              uses: 'google-github-actions/deploy-cloudrun@v1'
+              with:
+                service: '${{ secrets.GCP_SERVICE_NAME }}'
+                region: 'asia-northeast3'
+                image: 'gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE_NAME }}:${{ github.sha }}'
+                platform: 'managed'
+                allow_unauthenticated: true
+                env_vars:
+                  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
