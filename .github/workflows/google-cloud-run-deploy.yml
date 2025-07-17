@@ -44,4 +44,4 @@ jobs:
           # ✨ 여기가 v1 문법에 맞게 수정되었습니다.
           flags: '--platform=managed --allow-unauthenticated'
           env_vars:
-            GCP_SA_KEY: ${{ toJson(secrets.GCP_SA_KEY) }}
+          GCP_SA_KEY: ${{ toJson(secrets.GCP_SA_KEY) }}
