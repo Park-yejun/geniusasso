@@ -41,7 +41,7 @@ jobs:
           service: '${{ secrets.GCP_SERVICE_NAME }}'
           region: 'asia-northeast3'
           image: 'gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_SERVICE_NAME }}:${{ github.sha }}'
-          platform: 'managed'
-          allow_unauthenticated: true
+          # ✨ 여기가 v1 문법에 맞게 수정되었습니다.
+          flags: '--platform=managed --allow-unauthenticated'
           env_vars:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+            GCP_SA_KEY: ${{ toJson(secrets.GCP_SA_KEY) }}
