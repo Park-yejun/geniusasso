@@ -15,5 +15,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Gunicorn 서버 실행
-# ✨✨✨ 여기가 수정된 부분입니다! timeout 시간을 120초로 늘렸습니다. ✨✨✨
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--timeout", "120", "main:app"]
+# ✨✨✨ 여기가 최종 수정된 부분입니다! 작업자(workers)를 2명으로 늘렸습니다. ✨✨✨
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "2", "--timeout", "120", "main:app"]
