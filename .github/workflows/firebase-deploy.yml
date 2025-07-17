@@ -19,4 +19,4 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
           channelId: live
-          projectId: '${{ secrets.GCP_PROJECT_ID }}' # 백엔드와 동일한 프로젝트 ID
+          projectId: '${{ secrets.GCP_PROJECT_ID }}' # 백엔드와 동일한 프로젝트 ID s
