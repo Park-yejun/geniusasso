@@ -46,5 +46,5 @@ jobs:
           flags: '--platform=managed --allow-unauthenticated'
           # ✨✨✨ 여기가 가장 중요한 수정 부분입니다! toJson()을 제거했습니다. ✨✨✨
           env_vars:
-            GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
 
