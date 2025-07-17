@@ -1,31 +1,19 @@
 import os
 import gspread
-import json  # json 라이브러리를 추가합니다.
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from google.oauth2.service_account import Credentials
+# ✨ google.oauth2.service_account 와 json 라이브러리가 더 이상 필요 없습니다.
 
-# Flask 앱 초기화 및 CORS 설정.
+# Flask 앱 초기화 및 CORS 설정
 app = Flask(__name__)
-CORS(app) # 모든 도메인에서의 요청을 허용 (개발용)
+CORS(app)
 
 # --- ✨ 여기가 수정된 부분입니다 ✨ ---
-# 구글 시트 인증 설정
-scopes = ["https://www.googleapis.com/auth/spreadsheets"]
-
-# 환경 변수에서 JSON 키 '문자열'을 가져옵니다.
-key_string = os.environ.get("GCP_SA_KEY")
-
-# 가져온 문자열을 파이썬 딕셔너리 형태로 변환합니다.
-key_info = json.loads(key_string)
-
-# 변환된 정보를 사용해 인증합니다.
-creds = Credentials.from_service_account_info(
-    info=key_info,  # eval() 대신 json.loads() 결과를 사용합니다.
-    scopes=scopes
-)
-client = gspread.authorize(creds)
+# Cloud Run 환경에서는 gspread가 자동으로 서비스 계정을 찾아 인증합니다.
+# 따라서 복잡한 인증 코드 전체가 필요 없어집니다.
+client = gspread.service_account()
 # --- ✨ 수정된 부분 끝 ---
+
 
 # 구글 시트 정보
 SPREADSHEET_ID = '1F4rZbcBiuM9MDoFyfHnXVIFJ7GX99lUmaZZL_i3WZ40'
@@ -48,8 +36,14 @@ def update_sheet():
         return jsonify({"status": "success", "message": f"'{text_to_write}' written to Sheet2 A1"}), 200
 
     except Exception as e:
-        print(f"Error: {e}")
+        # 오류 발생 시 로그에 더 자세히 출력
+        app.logger.error(f"An error occurred: {e}", exc_info=True)
         return jsonify({"status": "error", "message": str(e)}), 500
+
+# / 경로에 대한 기본 응답 추가 (서버 동작 확인용)
+@app.route('/')
+def index():
+    return "Backend server is running!"
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
